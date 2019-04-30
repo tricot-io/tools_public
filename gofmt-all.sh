@@ -9,6 +9,6 @@
 #   -w (to modify files) or -d (to report diffs)
 
 find . -name '*.go' | \
-    xargs -r awk \
+    xargs -r gawk \
         'FNR > 3 || /Code generated .* DO NOT EDIT\./ {nextfile}; {print FILENAME; nextfile}' | \
     xargs -r gofmt $*
