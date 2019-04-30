@@ -14,6 +14,6 @@ else
 fi
 
 find . -name '*.cc' -o -name '*.h' | \
-    xargs awk \
+    xargs awk -r \
         'FNR > 3 || /Code generated .* DO NOT EDIT\./ {nextfile}; {print FILENAME; nextfile}' | \
-    xargs "$CLANG_FORMAT" $*
+    xargs -r "$CLANG_FORMAT" $*

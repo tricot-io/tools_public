@@ -5,6 +5,6 @@
 # Runs buildifier on all non-generated Bazel files in the current directory and its subdirectories.
 
 find . -name 'BUILD' -o -name 'BUILD.bazel' -o -name 'WORKSPACE' -o -name '*.bzl' | \
-    xargs awk \
+    xargs -r awk \
         'FNR > 3 || /Code generated .* DO NOT EDIT\./ {nextfile}; {print FILENAME; nextfile}' | \
-    xargs buildifier $*
+    xargs -r buildifier $*
