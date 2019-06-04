@@ -2,6 +2,8 @@
 # Copyright 2019 Tricot Inc.
 # Use of this source code is governed by the license in the LICENSE file.
 
+# Builds and runs bazel2cmake (from tricot-io/bazel2x).
+
 B2X_REV="HEAD"
 
 while getopts ":hr:c:o:" OPT; do
