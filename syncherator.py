@@ -19,9 +19,9 @@ def _read_file(filename):
         return file_to_read.read()
 
 
-def _run(*args, cwd=None):
-    print('[{}] {}'.format(cwd, ' '.join(args)))
-    subprocess.run(args, cwd=cwd)
+def _run(*args, **kwargs):
+    print('[{}] {}'.format(kwargs.get('cwd'), ' '.join(args)))
+    subprocess.run(args, **kwargs)
 
 
 def syncherate(filename):
@@ -89,6 +89,11 @@ def syncherate(filename):
         for name, spec in repos.items():
             _sync_one(destdir, name, spec)
 
+    def _run_external(command, *args, **kwargs):
+        if 'cwd' not in kwargs:
+            kwargs['cwd'] = cwd
+        _run(_maybe_abs(command), *args, **kwargs)
+
     global_vars = {
         '__builtins__': None,
         'print': print,
@@ -100,6 +105,7 @@ def syncherate(filename):
         'remove_repo': _remove_repo,
         'clear_repos': _clear_repos,
         'sync': _sync,
+        'run_external': _run_external,
     }
     exec(_read_file(filename), global_vars, local_vars)
 
