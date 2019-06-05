@@ -26,7 +26,7 @@ def _run(*args, **kwargs):
     print('[{}] {}'.format(kwargs.get('cwd'), ' '.join(args)))
     if 'check' not in kwargs:
         kwargs['check'] = True
-    subprocess.run(args, **kwargs)
+    return subprocess.run(args, **kwargs)
 
 
 def syncherate(filename):
