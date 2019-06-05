@@ -47,21 +47,30 @@ def syncherate(filename):
         commit = spec['commit']
         shallow_since = spec.get('shallow_since')
 
-        if os.path.exists(gitdir):
-            if shallow_since:
+        if shallow_since:
+            if os.path.exists(gitdir):
                 _run('git', 'fetch', '--quiet',
                      '--shallow-since='+shallow_since, cwd=gitdir)
             else:
-                _run('git', 'fetch', '--quiet', cwd=gitdir)
-        else:
-            if shallow_since:
                 _run('git', 'clone', '--quiet', '--no-checkout',
                      '--shallow-since='+shallow_since, '--', remote, name,
                      cwd=destdir)
+            # In this case, this might fail if the commit wasn't on master.
+            result = _run('git', 'checkout', '--quiet', commit, cwd=gitdir,
+                          check=False)
+            if result.returncode:
+                # If so, fetch the commit directly and checking out again. Note:
+                # In this case, the commit better be an advertised object.
+                _run('git', 'fetch', '--quiet', 'origin', commit,
+                     cwd=gitdir)
+                _run('git', 'checkout', '--quiet', commit, cwd=gitdir)
+        else:
+            if os.path.exists(gitdir):
+                _run('git', 'fetch', '--quiet', cwd=gitdir)
             else:
                 _run('git', 'clone', '--quiet', '--no-checkout', '--', remote,
                      name, cwd=destdir)
-        _run('git', 'checkout', '--quiet', commit, cwd=gitdir)
+            _run('git', 'checkout', '--quiet', commit, cwd=gitdir)
 
     def _add_repos_from_file(filename, dictname):
         global_vars = {'__builtins__': None}
