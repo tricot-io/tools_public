@@ -60,6 +60,7 @@ def syncherate(filename):
 
     def _add_repos_from_file(filename, dictname):
         global_vars = {'__builtins__': None}
+        # pylint: disable=exec-used
         exec(_read_file(_maybe_abs(filename)), global_vars)
         for name, spec in global_vars[dictname].items():
             if name in repos:
@@ -107,6 +108,7 @@ def syncherate(filename):
         'sync': _sync,
         'run_external': _run_external,
     }
+    # pylint: disable=exec-used
     exec(_read_file(filename), global_vars, local_vars)
 
 
