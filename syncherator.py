@@ -24,6 +24,8 @@ def _read_file(filename, **kwargs):
 
 def _run(*args, **kwargs):
     print('[{}] {}'.format(kwargs.get('cwd'), ' '.join(args)))
+    if 'check' not in kwargs:
+        kwargs['check'] = True
     subprocess.run(args, **kwargs)
 
 
