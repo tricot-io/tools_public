@@ -26,12 +26,12 @@ def _run(*args, **kwargs):
 
 def syncherate(filename):
     """Executes the syncherator script from the given file."""
-    repos = {}
-    cwd = os.path.abspath(os.path.dirname(filename))
+    _repos = {}
+    _cwd = os.path.abspath(os.path.dirname(filename))
 
     def _maybe_abs(filename):
         return os.path.normpath(filename if os.path.isabs(filename) else
-                                os.path.join(cwd, filename))
+                                os.path.join(_cwd, filename))
 
     def _sync_one(destdir, name, spec):
         destdir = _maybe_abs(destdir)
@@ -63,42 +63,41 @@ def syncherate(filename):
         # pylint: disable=exec-used
         exec(_read_file(_maybe_abs(filename)), global_vars)
         for name, spec in global_vars[dictname].items():
-            if name in repos:
+            if name in _repos:
                 print('WARNING: repo {} being added already exists (will '
                       'override)'.format(name))
-            repos[name] = spec
+            _repos[name] = spec
 
     def _add_repo(name, remote, commit, shallow_since=None):
-        if name in repos:
+        if name in _repos:
             print('WARNING: repo {} being added already exists (will '
                   'override)'.format(name))
         spec = {'remote': remote, 'commit': commit}
         if shallow_since:
             spec['shallow_since'] = shallow_since
-        repos[name] = spec
+        _repos[name] = spec
 
     def _remove_repo(name):
-        if name not in repos:
+        if name not in _repos:
             print('WARNING: repo {} to be removed does not exist'.format(name))
             return
-        del repos[name]
+        del _repos[name]
 
     def _clear_repos():
-        repos.clear()
+        _repos.clear()
 
     def _sync(destdir):
-        for name, spec in repos.items():
+        for name, spec in _repos.items():
             _sync_one(destdir, name, spec)
 
-    def _run_external(command, *args, **kwargs):
-        if 'cwd' not in kwargs:
-            kwargs['cwd'] = cwd
-        _run(_maybe_abs(command), *args, **kwargs)
+    def _run_external(command, *args, cwd=None):
+        cwd = _maybe_abs(cwd) if cwd else _cwd
+        _run(_maybe_abs(command), *args, cwd=cwd)
 
     global_vars = {
         '__builtins__': None,
         'print': print,
-        'repos': repos,
+        'repos': _repos,
     }
     local_vars = {
         'add_repos_from_file': _add_repos_from_file,
