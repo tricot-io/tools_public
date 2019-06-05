@@ -59,7 +59,7 @@ BAZEL2CMAKE="${B2X_DIR}/bazel2cmake"
     set -x
     git clone -n -q -- https://github.com/tricot-io/bazel2x bazel2x
     cd bazel2x
-    git checkout "${B2X_REV}"
+    git checkout -q "${B2X_REV}"
     go build -o "${BAZEL2CMAKE}" ./cmd/bazel2cmake
 )
 
