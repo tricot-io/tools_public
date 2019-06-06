@@ -100,9 +100,11 @@ def syncherate(filename):
     def _clear_repos():
         _repos.clear()
 
-    def _sync(destdir):
+    def _sync(destdir, clear_repos=True):
         for name, spec in _repos.items():
             _sync_one(destdir, name, spec)
+        if clear_repos:
+            _clear_repos()
 
     def _sync_file_from_url(destdir, filename, url, sha256):
         destdir = _maybe_abs(destdir)
