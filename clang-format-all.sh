@@ -16,7 +16,7 @@ else
   CLANG_FORMAT=clang-format
 fi
 
-find . \( -iname '.c' -o -iname '*.cc' -o -iname '*.cpp' -o -iname '*.h' -o -iname '*.hh' -o \
+find . \( -iname '*.c' -o -iname '*.cc' -o -iname '*.cpp' -o -iname '*.h' -o -iname '*.hh' -o \
         -iname '*.hpp' \) -print0 | \
     xargs -r0 gawk -vORS='\0' \
         'FNR > 3 || /Code generated .* DO NOT EDIT\./ {nextfile}; {print FILENAME; nextfile}' | \
